@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Simple CRUD webservice. State is stored in a SimpleTable (DynamoDB) resource.
+Resources:
+  ApiResource:
+    Type: AWS::Serverless::SimpleTable
+  GetFunction:
+    Properties:
+      CodeUri: s3://quadyster-webinar/e07a9b746a0254d41d890d606d67504a
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: ApiResource
+      Events:
+        GetResource:
+          Properties:
+            Method: get
+            Path: /resource/{resourceId}
+          Type: Api
+      Handler: api_backend.get
+      Policies: AmazonDynamoDBReadOnlyAccess
+      Runtime: python3.6
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31
